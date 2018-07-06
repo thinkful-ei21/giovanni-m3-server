@@ -13,6 +13,7 @@ router.post('/', jsonParser, (req, res) => {
   const requiredFields = ['username', 'password'];
   const missingField = requiredFields.find(field => !(field in req.body));
 
+  console.log(req.body);
   if (missingField) {
     return res.status(422).json({
       code: 422,
@@ -103,13 +104,13 @@ router.post('/', jsonParser, (req, res) => {
       });
     })
     .then(user => {
-      return res.status(201).json(user.serialize());
+      return res.status(201).json(user.username);
     })
     .catch(err => {
       if (err.reason === 'ValidationError') {
         return res.status(err.code).json(err);
       }
-      res.status(500).json({code: 500, message: 'Internal server error'});
+      res.status(500).json({code: 500, message: 'Internal server error!'});
     });
 });
 
