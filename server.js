@@ -12,6 +12,7 @@ const { PORT, CLIENT_ORIGIN, DATABASE_URL } = require('./config');
 
 const { router: usersRouter } = require('./users');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
+const { router: scoreRouter} = require('./score');
 
 
 
@@ -39,6 +40,19 @@ app.use('/api/auth/', authRouter);
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
 //protected endpoints go here
+
+app.use('/api/score/', jwtAuth, scoreRouter);
+// app.get('/api/score', jwtAuth, (req, res) => {
+//   return res.json({
+//     data: 'rosebud'
+//   });
+// });
+
+// app.post('/api/score', jwtAuth, (req, res) => {
+//   return res.json({
+//     data: 'rosebud'
+//   });
+// });
 
 app.get('/api/protected', jwtAuth, (req, res) => {
   return res.json({
