@@ -12,26 +12,37 @@ router.get('/', (req, res) => {
   let username = req.user.username;
   console.log(req.user.username);
   User.find({username})
-    .then(found => {
-      console.log(found[0].highScore);
-      return found[0].highScore;
+    .then(usr => {
+      console.log(usr[0].highScore);
+      return usr[0].highScore;
     })
     .then(score =>res.status(201).json({ data: score}));
 });
 
 router.post('/', jsonParser, (req, res) => {
   let username = req.user.username;
-  console.log(req)
   
-  console.log(req.user.username);
+  console.log(req.user.username, req.headers.score);
 
-  User.findOneAndUpdate({username},{highScore: req.headers.score})
+  User.find({username})
+    .then(usr => {
+      console.log(usr[0].highScore);
+      return usr[0].highScore;
+    })
+    .then(score =>{
+      if(score < req.headers.score){
+        return User.findOneAndUpdate({username},{highScore: req.headers.score});
+      }
+      else {return score;}
+    })
     .then(()=> User.find({username})) 
     .then(found => {
       console.log(found[0].highScore);
       return found[0].highScore;
     })
+
     .then(score =>res.status(201).json({ data: score}));
+
 });
 // router.post
 
